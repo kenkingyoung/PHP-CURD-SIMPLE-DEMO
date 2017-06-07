@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>StudentManagement</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <style type="text/css">
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="text-align:center; margin-bottom: 30px;">
+                <h2>New Student</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <form class="form-horizontal" action="AddNew.php" method="POST" onsubmit="javascript:return checkForm();">
+                    <div class="form-group">
+                        <label for="inputName" class="col-md-2 control-label">Name</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="inputName" name="inputName" placeholder="Name">
+                        </div>
+                        <div class="col-md-2 error">
+                            * <span id="nameErr"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAge" class="col-md-2 control-label">Age</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="inputAge" name="inputAge" placeholder="Age">
+                        </div>
+                        <div class="col-md-2 error">
+                            * <span id="ageErr"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSex" class="col-md-2 control-label">Sex</label>
+                        <div class="col-md-8">
+                            <select id="inputSex" name="inputSex" class="form-control">
+                                <option value="">-- Choose Sex --</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 error">
+                            * <span id="sexErr"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputGrade" class="col-md-2 control-label">Grade</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="inputGrade" name="inputGrade" placeholder="Grade">
+                        </div>
+                        <div class="col-md-2 error">
+                            * <span id="gradeErr"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputClass" class="col-md-2 control-label">Class</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="inputClass" name="inputClass" placeholder="Class">
+                        </div>
+                        <div class="col-md-2 error">
+                            * <span id="classErr"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-ok" style="margin-right: 5px;"></span>Submit
+                            </button>
+                            <a class="btn btn-default" href="javascript:history.back();">
+                                <span class="glyphicon glyphicon-share-alt" style="margin-right: 5px;"></span>Back
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        function isPositiveNum(s) { //是否为正整数  
+            var re = /^[0-9]*[1-9][0-9]*$/;
+            return re.test(s)
+        }
+
+        function checkForm() {
+            var name = $("#inputName").val();
+            var age = $("#inputAge").val();
+            var sex = $("#inputSex").val();
+            var grade = $("#inputGrade").val();
+            var classes = $("#inputClass").val();
+
+            debugger;
+            if (name === "") {
+                $("#nameErr").html("Name is required");
+                return false;
+            } else {
+                $("#nameErr").html("");
+            }
+
+            if (age === "") {
+                $("#ageErr").html("Age is required");
+                return false;
+            } else {
+                if (!isPositiveNum(age)) {
+                    $("#ageErr").html("Age must be int");
+                    return false;
+                } else {
+                    $("#ageErr").html("");
+                }
+            }
+
+            if (sex === "") {
+                $("#sexErr").html("Sex is required");
+                return false;
+            } else {
+                $("#sexErr").html("");
+            }
+
+            if (grade === "") {
+                $("#gradeErr").html("Grade is required");
+                return false;
+            } else {
+                $("#gradeErr").html("");
+            }
+
+            if (classes === "") {
+                $("#classErr").html("Class is required");
+                return false;
+            } else {
+                $("#classErr").html("");
+            }
+
+            return true;
+        }
+    </script>
+</body>
+
+</html>
