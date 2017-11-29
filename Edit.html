@@ -21,14 +21,15 @@
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10">
-                <form class="form-horizontal" action="Edit.php" method="POST" onsubmit="javascript:return checkForm();">
+                <form class="form-horizontal" action="">
                     <div class="form-group">
                         <label for="inputName" class="col-md-2 control-label">Name</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="inputName" name="inputName" placeholder="Name">
                         </div>
                         <div class="col-md-2 error">
-                            * <span id="nameErr"></span>
+                            *
+                            <span id="nameErr"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -37,7 +38,8 @@
                             <input type="text" class="form-control" id="inputAge" name="inputAge" placeholder="Age">
                         </div>
                         <div class="col-md-2 error">
-                            * <span id="ageErr"></span>
+                            *
+                            <span id="ageErr"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -50,7 +52,8 @@
                             </select>
                         </div>
                         <div class="col-md-2 error">
-                            * <span id="sexErr"></span>
+                            *
+                            <span id="sexErr"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -59,7 +62,8 @@
                             <input type="text" class="form-control" id="inputGrade" name="inputGrade" placeholder="Grade">
                         </div>
                         <div class="col-md-2 error">
-                            * <span id="gradeErr"></span>
+                            *
+                            <span id="gradeErr"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -68,12 +72,13 @@
                             <input type="text" class="form-control" id="inputClass" name="inputClass" placeholder="Class">
                         </div>
                         <div class="col-md-2 error">
-                            * <span id="classErr"></span>
+                            *
+                            <span id="classErr"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="button" id="btnSubmit" class="btn btn-primary">
                                 <span class="glyphicon glyphicon-ok" style="margin-right: 5px;"></span>Submit
                             </button>
                             <a class="btn btn-default" href="javascript:history.back();">
@@ -89,12 +94,12 @@
         </div>
     </div>
     <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
-
+    <script type="text/javascript" src="js/layer/layer.js"></script>
     <script type="text/javascript">
-        $(function() {
+        $(() => {
             var stuId = getUrlParam("id");
             var page = getUrlParam("page");
-            $.getJSON("getStudentInfo.php?id=" + stuId, function(data) {
+            $.getJSON("getStudentInfo.php?id=" + stuId, function (data) {
                 $("#id").val(data["id"]);
                 $("#page").val(page);
                 $("#inputName").val(data["Name"]);
@@ -110,6 +115,36 @@
                 $("#inputSex").html("");
                 $("#inputSex").html(sexOptions);
             });
+
+            $("#btnSubmit").click(() => {
+                var flag = checkForm();
+                if (flag) {
+                    layer.msg("数据提交中...", { icon: 16, time: 10000, shade: 0.5 });
+                    $.ajax({
+                        url: "Edit.php",
+                        type: "POST",
+                        data: {
+                            id: $("#id").val(),
+                            page: $("#page").val(),
+                            name: $("#inputName").val(),
+                            age: $("#inputAge").val(),
+                            sex: $("#inputSex").val(),
+                            grade: $("#inputGrade").val(),
+                            class: $("#inputClass").val()
+                        },
+                        success: (data) => {
+                            if (data === "1") {
+                                layer.msg("修改成功", { icon: 1, time: 2000, shade: 0.5 });
+                                setTimeout(function () {
+                                    window.location.href = "Index.html?page=" + page;
+                                }, 1000);
+                            } else {
+                                layer.msg("修改失败: " + data, { icon: 2, time: 2000 });
+                            }
+                        }
+                    });
+                }
+            })
         })
 
         function getUrlParam(paramName) {

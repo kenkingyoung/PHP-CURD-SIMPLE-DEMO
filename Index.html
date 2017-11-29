@@ -9,16 +9,24 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-12" style="text-align:center; margin-bottom: 30px;">
+            <div class="col-md-12" style="text-align:center; margin-bottom: 60px;">
                 <h1>Student Management</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-md-1"></div>
-            <div class="col-md-10" style="text-align:right; margin-bottom: 30px;">
-                <a href="Add.html" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-plus-sign" style="margin-right: 5px;"></span>New Student
-                </a>
+            <div class="col-md-10" style="text-align:right; margin-bottom: 5px;">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="stuName" placeholder="Student Name">
+                    </div>
+                    <a href="javascript:search()" class="btn btn-default">
+                        <i class="glyphicon glyphicon-search" style="margin-right: 5px;"></i>Search
+                    </a>
+                    <a href="Add.html" class="btn btn-primary" style="margin-left: 20px;">
+                        <span class="glyphicon glyphicon-plus-sign" style="margin-right: 5px;"></span>New Student
+                    </a>
+                </form>
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -33,7 +41,7 @@
                             <th>Sex</th>
                             <th>Grade</th>
                             <th>Class</th>
-                            <th>#</th>
+                            <th style="width: 150px;">#</th>
                         </tr>
                     </thead>
                     <tbody id="studentList"></tbody>
@@ -44,49 +52,64 @@
         </div>
     </div>
     <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="js/layer/layer.js"></script>
     <script type="text/javascript">
         var page = getUrlParam("page") == null ? 1 : getUrlParam("page");
 
-        $(function() {
-            bindPaginationData();
-            bindPaginationFooter();
+        $(function () {
+            bindPaginationData("");
+            bindPaginationFooter("");
         })
 
-        function bindPaginationData() {
+        function bindPaginationData(stuName) {
+            $("#studentList").html("");
             $.ajax({
                 url: "getPaginationData.php",
                 type: "GET",
-                data: "&page=" + page,
+                data: { stuName: stuName, page: page },
                 async: true,
-                complete: function(xhr, status) {
-                    if (status === 'error' || !xhr.responseText) {} else {
+                complete: function (xhr, status) {
+                    if (status === 'error' || !xhr.responseText) { } else {
                         var data = xhr.responseText;
                         var res = eval('(' + data + ')')
-                        $.each(res, function(index, item) {
-                            $("#studentList").append(
-                                "<tr>" +
-                                "<td>" + item["Name"] + "</td>" +
-                                "<td>" + item["Age"] + "</td>" +
-                                "<td>" + (item["Sex"] == "F" ? "女" : "男") + "</td>" +
-                                "<td>" + item["Grade"] + "</td>" +
-                                "<td>" + item["Class"] + "</td>" +
-                                "<td><a href='Edit.html?id=" + item["id"] + "&page=" + page + "'>" +
-                                "<span class='glyphicon glyphicon-edit' style='margin-right:5px;'></span>Edit</a></td>" +
-                                "</tr>");
-                        });
+                        if (res.length > 0) {
+                            $.each(res, function (index, item) {
+                                $("#studentList").append(
+                                    "<tr>" +
+                                    "<td>" + item["Name"] + "</td>" +
+                                    "<td>" + item["Age"] + "</td>" +
+                                    "<td>" + (item["Sex"] == "F" ? "女" : "男") + "</td>" +
+                                    "<td>" + item["Grade"] + "</td>" +
+                                    "<td>" + item["Class"] + "</td>" +
+                                    "<td><a href='Edit.html?id=" + item["id"] + "&page=" + page + "'>" +
+                                    "<span class='glyphicon glyphicon-edit' style='margin-right:5px;'></span>Edit</a>" +
+                                    "<span style='margin: 0 10px;'>|</span>" +
+                                    "<a href=\"javascript:deleteEntity('" + item["id"] + "')\" style='color: red;'>" +
+                                    "<span class='glyphicon glyphicon-trash' style='margin-right:5px;'></span>Delete</a></td>" +
+                                    "</tr>");
+                            });
+                        } else {
+                            var appendHtml = "<tr>";
+                            appendHtml += "<td colspan='6' style='text-align: center;'>";
+                            appendHtml += "<span style='color: red;'>";
+                            appendHtml += "<i class='glyphicon glyphicon-info-sign' style='margin-right: 5px;'></i>";
+                            appendHtml += "no student record</span></td></tr>"
+
+                            $("#studentList").append(appendHtml);
+                        }
                     }
                 }
             });
         }
 
-        function bindPaginationFooter() {
+        function bindPaginationFooter(stuName) {
             $.ajax({
                 url: "getPaginationFooter.php",
                 type: "GET",
-                data: "page=" + page,
+                data: { stuName: stuName, page: page },
                 async: true,
-                complete: function(xhr, status) {
-                    if (status === 'error' || !xhr.responseText) {} else {
+                complete: function (xhr, status) {
+                    if (status === 'error' || !xhr.responseText) { } else {
                         var data = xhr.responseText;
                         $("#pageFooter").html(data);
                     }
@@ -99,6 +122,33 @@
             var r = window.location.search.substr(1).match(reg); //匹配目标参数
             if (r != null) return unescape(r[2]);
             return null; //返回参数值
+        }
+
+        function deleteEntity(id) {
+            if (confirm("确认删除该条记录？")) {
+                $.ajax({
+                    url: "Delete.php",
+                    type: "GET",
+                    data: { id: id },
+                    success: function (data) {
+                        if (data === "1") {
+                            layer.msg("删除成功！");
+                            setTimeout(() => {
+                                window.location.href = "Index.html?page=" + page;
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        }
+
+        function search() {
+            var stuName = $("#stuName").val();
+
+            bindPaginationData(stuName);
+            bindPaginationFooter(stuName);
+
+            page = 1;
         }
     </script>
 </body>

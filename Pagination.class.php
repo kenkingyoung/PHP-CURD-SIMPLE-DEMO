@@ -30,7 +30,7 @@
             // 总页数
             $totalPage = ceil($totalCount / Pagination::PAGE_SIZE);
 
-            if($page > $totalPage) {
+            if($totalPage > 0 && $page > $totalPage) {
                 $page = $totalPage;
             }
 
@@ -62,13 +62,19 @@
             }
 
             $paginationFooter = "<div style='height: 30px; line-height: 30px; margin: 20px 0;'>";
-            $paginationFooter .= "<span style='margin: 0 5px;'><a href='".$url."'>首页</a></span>";
+
+            if($totalPage > 1){
+                $paginationFooter .= "<span style='margin: 0 5px;'><a href='".$url."'>首页</a></span>";
+            }
 
             for($i = 1; $i <= $totalPage; $i++){
                 $paginationFooter .= "<span style='margin: 0 5px;'><a href='".$url.((stripos($url, "?")?"&":"?"))."page=".$i."'".($i==$page?" style='color:red;'":"").">".$i."</a></span>";
             }
 
-            $paginationFooter .= "<span style='margin: 0 5px;'><a href='".$url.((stripos($url, "?")?"&":"?"))."page=".$totalPage."'>末页</a></span>";
+            if($totalPage > 1){
+                $paginationFooter .= "<span style='margin: 0 5px;'><a href='".$url.((stripos($url, "?")?"&":"?"))."page=".$totalPage."'>末页</a></span>";
+            }
+
             $paginationFooter .= "</div>";
 
             return $paginationFooter;

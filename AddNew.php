@@ -2,11 +2,11 @@
 
     require_once ("Sqliconnect.class.php");
 
-    $name = htmlspecialchars($_POST["inputName"]) ;
-    $age = htmlspecialchars($_POST["inputAge"]);
-    $sex = htmlspecialchars($_POST["inputSex"]);
-    $grade = htmlspecialchars($_POST["inputGrade"]);
-    $class = htmlspecialchars($_POST["inputClass"]);
+    $name = htmlspecialchars($_POST["name"]) ;
+    $age = htmlspecialchars($_POST["age"]);
+    $sex = htmlspecialchars($_POST["sex"]);
+    $grade = htmlspecialchars($_POST["grade"]);
+    $class = htmlspecialchars($_POST["class"]);
 
     $sqliConn = new Sqliconnect();
 
@@ -16,8 +16,8 @@
     $result = $sqliConn->excuteCUD($sql);
 
     if($result === 0){
-        echo "<script type='text/javascript'>alert('新增成功');location.href='Index.html';</script>";
+        echo "1";
     }else{
-        echo "<script type='text/javascript'>alert('新增失败');</script>";
+        echo "0";
     }
 ?>

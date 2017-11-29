@@ -4,19 +4,27 @@
     date_default_timezone_set("PRC");
 
     $tableName = "student";
-    $classId = 0;
-    $newsType = "";
+    $stuName = "";
     $page = 1;
 
     if(is_array($_GET) && count($_GET) > 0){
         if(isset($_GET["page"]) && is_numeric($_GET["page"])){
             $page = intval($_GET['page']);
         }
+
+        if(isset($_GET["stuName"])){
+            $stuName = $_GET['stuName'];
+        }
     }
 
     $pagination = new Pagination();
+
+    $condition = "";
+    if($stuName != ""){
+        $condition = "Name like '%".$stuName."%'";
+    }
     
-    $paginationData = $pagination->getPaginationData($page, $tableName, "");
+    $paginationData = $pagination->getPaginationData($page, $tableName, $condition);
 
     $jarr = array();
     while($row = $paginationData->fetch_assoc()){

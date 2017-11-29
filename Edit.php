@@ -4,11 +4,11 @@
 
     $stuId = htmlspecialchars($_POST["id"]) ;
     $page = htmlspecialchars($_POST["page"]) ;
-    $name = htmlspecialchars($_POST["inputName"]) ;
-    $age = htmlspecialchars($_POST["inputAge"]);
-    $sex = htmlspecialchars($_POST["inputSex"]);
-    $grade = htmlspecialchars($_POST["inputGrade"]);
-    $class = htmlspecialchars($_POST["inputClass"]);
+    $name = htmlspecialchars($_POST["name"]) ;
+    $age = htmlspecialchars($_POST["age"]);
+    $sex = htmlspecialchars($_POST["sex"]);
+    $grade = htmlspecialchars($_POST["grade"]);
+    $class = htmlspecialchars($_POST["class"]);
 
     $sqliConn = new Sqliconnect();
 
@@ -18,8 +18,8 @@
     $result = $sqliConn->excuteCUD($sql);
 
     if($result === 0){
-        echo "<script type='text/javascript'>alert('修改成功');location.href='Index.html?page=".$page."';</script>";
+        echo "1";
     }else{
-        echo "<script type='text/javascript'>alert('修改失败');location.href='Edit.html?id=".$stuId."';</script>";
+        echo "0";
     }
 ?>
